@@ -1,0 +1,22 @@
+name: _probe
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 探针 - 检查 PAT 注入
+        env:
+          PAT: ${{ secrets.PAT }}
+        run: |
+          echo "PAT 长度: ${#PAT}"
+          echo "PAT 前 16 位: ${PAT:0:16}"
+          echo "PAT 后 8 位: ${PAT: -8}"
+          echo "首字符类型: $(echo -n "$PAT" | cut -c1-4)"
+          echo "---"
+          echo "是否含空格/换行:"
+          echo -n "$PAT" | od -c | head -3
